@@ -1,14 +1,17 @@
 import React from 'react';
-import { Platform, type ColorValue } from 'react-native';
+import { type ColorValue } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type IconName = React.ComponentProps<typeof Feather>['name'];
 
 export default function TabLayout() {
   const c = useColors();
-  const isWeb = Platform.OS === 'web';
+  const insets = useSafeAreaInsets();
+  // Reserve 60dp for the menu, separately from Android's gesture/3-button area.
+  const bottomInset = Math.max(insets.bottom, 8);
   const icon = (name: IconName) =>
     function TabIcon({ color }: { color: ColorValue }) {
       return <Feather name={name} size={20} color={color as string} />;
@@ -19,24 +22,28 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: c.primary,
         tabBarInactiveTintColor: c.mutedForeground,
-        tabBarLabelStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 11 },
+        tabBarLabelPosition: 'below-icon',
+        tabBarHideOnKeyboard: true,
+        tabBarLabelStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 11, lineHeight: 16, marginBottom: 2 },
         tabBarActiveBackgroundColor: c.secondary,
-        tabBarItemStyle: { borderRadius: 16, marginHorizontal: 4, marginVertical: 5 },
+        tabBarItemStyle: { borderRadius: 14, marginHorizontal: 3, paddingVertical: 4 },
         tabBarStyle: {
-          position: 'absolute',
+          // Normal layout reserves screen space; content cannot slip underneath.
           backgroundColor: c.white,
           borderTopWidth: 1,
           borderTopColor: c.border,
           elevation: 0,
           paddingHorizontal: 8,
-          ...(isWeb ? { height: 84 } : {}),
+          height: 60 + bottomInset,
+          paddingTop: 4,
+          paddingBottom: bottomInset,
         },
       }}
     >
       <Tabs.Screen name="index" options={{ title: '오늘', tabBarIcon: icon('sun') }} />
       <Tabs.Screen name="meds" options={{ title: '내 약', tabBarIcon: icon('plus-square') }} />
       <Tabs.Screen name="history" options={{ title: '기록', tabBarIcon: icon('calendar') }} />
-      <Tabs.Screen name="settings" options={{ title: '위젯·백업', tabBarIcon: icon('layers') }} />
+      <Tabs.Screen name="settings" options={{ href: null }} />
     </Tabs>
   );
 }

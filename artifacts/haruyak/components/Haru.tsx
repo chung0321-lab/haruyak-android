@@ -25,7 +25,8 @@ export function useTopPad() {
   const insets = useSafeAreaInsets();
   return Platform.OS === 'web' ? 67 : insets.top + 12;
 }
-export const BOTTOM_PAD = Platform.OS === 'web' ? 120 : 110;
+// The tab navigator now reserves its own height, including the system inset.
+export const BOTTOM_PAD = 24;
 
 export function PillIcon({ size = 28 }: { size?: number }) {
   return <Image source={pillImage} style={{ width: size, height: size }} resizeMode="contain" />;

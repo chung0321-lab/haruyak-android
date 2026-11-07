@@ -1,3 +1,5 @@
+'use no memo';
+
 import React from 'react';
 import { FlexWidget, ImageWidget, ListWidget, TextWidget, WidgetInfo } from 'react-native-android-widget';
 import { Database, nextDose, slots, today } from '../lib/model';
@@ -8,6 +10,8 @@ const C = {
   lilac: '#eee3ff', card: '#fff9f3', done: '#fff0cb', white: '#ffffff',
 } as const;
 export function MedicationWidget({ db, info, error }: { db: Database; info: WidgetInfo; error?: string }) {
+  // Headless rendering runs outside React; compiler memo hooks cannot run here.
+  'use no memo';
   const day = today();
   const list = slots(db, day);
   const completed = list.filter(s => db.checks[s.key]).length;
@@ -19,7 +23,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
   return (
     <FlexWidget style={{
       width: 'match_parent', height: 'match_parent', padding: small ? 10 : 8,
-      borderRadius: 24, backgroundGradient: { from: C.peach, to: C.lilac, orientation: 'TL_BR' },
+      borderRadius: 24, backgroundColor: C.peach, backgroundGradient: { from: C.peach, to: C.lilac, orientation: 'TL_BR' },
     }}>
       {small && <FlexWidget style={{ flexDirection: 'row', alignItems: 'center', width: 'match_parent' }}>
         <ImageWidget image={require('../assets/images/icon.png')} imageWidth={small ? 20 : 26} imageHeight={small ? 20 : 26} clickAction="OPEN_APP" accessibilityLabel="하루약 앱 열기" />
@@ -78,6 +82,20 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
         <TextWidget text="새로고침" clickAction="REFRESH" accessibilityLabel="오늘 일정 새로고침"
           style={{ fontSize: small ? 10 : 11, color: C.primary, padding: small ? 5 : 7, backgroundColor: '#ffffffbb', borderRadius: 9 }} />
       </FlexWidget>}
+    </FlexWidget>
+  );
+}
+
+// Independent fallback: no database reads or compiler-generated hooks.
+export function WidgetError({ message }: { message: string }) {
+  'use no memo';
+  return (
+    <FlexWidget style={{ width: 'match_parent', height: 'match_parent', padding: 16,
+      backgroundColor: '#fff1e8', borderRadius: 20 }} clickAction="OPEN_APP">
+      <TextWidget text="혜진의 하루약" style={{ fontSize: 16, color: '#4c3c61', fontWeight: 'bold' }} />
+      <TextWidget text="위젯을 표시하지 못했어요. 눌러서 앱을 열고 다시 갱신해 주세요."
+        maxLines={4} style={{ fontSize: 12, color: '#a83434', marginTop: 8 }} />
+      <TextWidget text={message} maxLines={3} style={{ fontSize: 10, color: '#796d87', marginTop: 8 }} />
     </FlexWidget>
   );
 }

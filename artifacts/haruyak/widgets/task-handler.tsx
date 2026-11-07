@@ -1,7 +1,7 @@
 import React from 'react';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
-import { MedicationWidget } from './MedicationWidget';
-import { emptyDatabase, readDatabase, setDoseFromWidget, today } from '../lib/store';
+import { MedicationWidget, WidgetError } from './MedicationWidget';
+import { readDatabase, setDoseFromWidget, today } from '../lib/store';
 import { refreshWidgets } from '../lib/widget-refresh';
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps): Promise<void> {
@@ -18,8 +18,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps): Promise<
     props.renderWidget(<MedicationWidget db={await readDatabase()} info={props.widgetInfo} />);
     await refreshWidgets();
   } catch (e) {
-    const db = await readDatabase().catch(() => emptyDatabase());
-    props.renderWidget(<MedicationWidget db={db} info={props.widgetInfo}
-      error={`처리하지 못했어요. 새로고침하거나 앱을 열어 주세요.\n${e instanceof Error ? e.message : '저장 오류'}`} />);
+    console.error('[HaruWidget] render failed', e);
+    props.renderWidget(<WidgetError message={e instanceof Error ? e.message : '저장 오류'} />);
   }
 }

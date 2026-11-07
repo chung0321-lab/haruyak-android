@@ -2,7 +2,7 @@
   "expo": {
     "name": "혜진의 하루약",
     "slug": "haruyak",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "haruyak",
@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "com.haruyak.hyejin",
-      "versionCode": 1,
+      "versionCode": 4,
       "allowBackup": false,
       "permissions": ["android.permission.RECEIVE_BOOT_COMPLETED"],
       "blockedPermissions": [
