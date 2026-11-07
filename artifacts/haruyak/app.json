@@ -1,0 +1,71 @@
+{
+  "expo": {
+    "name": "혜진의 하루약",
+    "slug": "haruyak",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "haruyak",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.haruyak.hyejin",
+      "versionCode": 1,
+      "allowBackup": false,
+      "permissions": ["android.permission.RECEIVE_BOOT_COMPLETED"],
+      "blockedPermissions": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-sharing",
+      ["react-native-android-widget", {
+        "widgets": [
+          {
+            "name": "HaruSmall",
+            "label": "혜진의 하루약 · 작은 카드",
+            "description": "오늘 완료 횟수와 다음 복용 일정",
+            "minWidth": "140dp",
+            "minHeight": "150dp",
+            "targetCellWidth": 2,
+            "targetCellHeight": 2,
+            "resizeMode": "horizontal|vertical",
+            "updatePeriodMillis": 1800000,
+            "previewImage": "./assets/images/icon.png"
+          },
+          {
+            "name": "HaruLarge",
+            "label": "혜진의 하루약 · 큰 카드",
+            "description": "오늘 먹을 약 목록 · 복용 체크와 취소",
+            "minWidth": "250dp",
+            "minHeight": "250dp",
+            "targetCellWidth": 4,
+            "targetCellHeight": 4,
+            "resizeMode": "horizontal|vertical",
+            "updatePeriodMillis": 1800000,
+            "previewImage": "./assets/images/icon.png"
+          }
+        ]
+      }],
+      "./plugins/with-day-refresh.js"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

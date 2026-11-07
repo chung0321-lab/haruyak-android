@@ -1,0 +1,2 @@
+- [하루약 제품 범위](haruyak-product.md) — 실제 갤럭시 홈 위젯과 오프라인 기록이 핵심이며 Expo Go만으로 완료 처리하지 않는다.
+- [Android 위젯 생성 순서](android-widget-generation.md) — 라이브러리의 provider 생성이 사용자 dangerous mod 결과를 덮어쓸 수 있다.

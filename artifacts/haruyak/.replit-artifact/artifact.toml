@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/"
+title = "혜진의 하루약"
+description = "파스텔 복약 기록 앱과 갤럭시 홈 화면용 소형·대형 네이티브 위젯. 로그인과 서버 없이 기기에 저장하고 기존 HTML JSON 백업을 복원합니다."
+version = "1.0.0"
+id = "artifacts/haruyak"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/" ]
+localPort = 24056
+
+[services.development]
+run = "pnpm --filter @workspace/haruyak run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/haruyak", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/haruyak", "run", "serve" ]
+
+[services.env]
+PORT = "24056"
+BASE_PATH = "/"

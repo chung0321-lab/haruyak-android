@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "40rngjXWUiWoHObswDRXx"
+uri = "file://artifacts/haruyak/ANDROID-GUIDE.md"
+type = "text"
+title = "갤럭시 APK 제작·설치·위젯 확인 안내"
+description = "APK 빌드 방법, 홈 화면 위젯 추가, 기존 JSON 백업 복원, 실기기 확인표와 절전 제한을 담았습니다."
+logical_id = "eac688e8-5315-4516-b356-b51f4093e33a"
+content_hash = "sha256:a8fba63034af1647a887176a8fd2ad3c9546394c369990ad917b697ebf101268"
+size = 9973
+mtime_ms = 1794057576087
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c9e13a8d-e9c8-4117-b51f-1dfd2abed26b/eac688e8-5315-4516-b356-b51f4093e33a/46f87659-bac7-4a1e-8714-836a1a4563bf"
+storage_version_token = "1794057832087385"
+content_type = "text/markdown"
