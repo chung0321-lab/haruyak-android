@@ -6,7 +6,7 @@ import { pickBackup, shareBackup } from '@/lib/backup';
 import { refreshWidgets } from '@/lib/widget-refresh';
 import { errorText, useHaru } from '@/contexts/HaruContext';
 import { useColors } from '@/hooks/useColors';
-import { Background, BOTTOM_PAD, Btn, Card, PillIcon, Progress, ScreenHeader, koDate, useTopPad } from '@/components/Haru';
+import { Background, BOTTOM_PAD, Btn, Card, PillIcon, Progress, ScreenHeader, useTopPad } from '@/components/Haru';
 
 const SAMPLE = `{
   "version": 1,
@@ -117,11 +117,6 @@ export default function SettingsScreen() {
           </View>
 
           <View style={[s.wLarge, { backgroundColor: c.widgetBg, borderColor: c.heroBorder }]}>
-            <View style={s.wHead}>
-              <PillIcon size={18} />
-              <Text style={[s.wTitle, { color: c.brand, flex: 1 }]}>{koDate(todayStr)}</Text>
-              <Text style={[s.wTitle, { color: c.foreground }]}>{doneN}/{list.length}</Text>
-            </View>
             {list.length === 0 ? (
               <Text style={[s.wNext, { color: c.mutedForeground }]}>오늘 챙길 약이 없어요</Text>
             ) : (
@@ -137,8 +132,6 @@ export default function SettingsScreen() {
                 );
               })
             )}
-            {list.length > 4 && <Text style={[s.wNext, { color: c.mutedForeground }]}>스크롤하면 {list.length - 4}개 더</Text>}
-            <Text style={[s.wLabel, { color: c.mutedForeground }]}>큰 위젯 · 스크롤 · 체크/취소</Text>
           </View>
         </View>
 

@@ -52,9 +52,9 @@
             "label": "혜진의 하루약 · 큰 카드",
             "description": "오늘 먹을 약 목록 · 복용 체크와 취소",
             "minWidth": "250dp",
-            "minHeight": "250dp",
+            "minHeight": "110dp",
             "targetCellWidth": 4,
-            "targetCellHeight": 4,
+            "targetCellHeight": 2,
             "resizeMode": "horizontal|vertical",
             "updatePeriodMillis": 1800000,
             "previewImage": "./assets/images/icon.png"
