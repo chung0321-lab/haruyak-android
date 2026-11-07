@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlexWidget, ImageWidget, ListWidget, TextWidget, WidgetInfo } from 'react-native-android-widget';
 import { Database, nextDose, slots, today } from '../lib/model';
+import { largeWidgetLayout, widgetRows } from './layout';
 
 const C = {
   ink: '#4c3c61', muted: '#796d87', primary: '#7957a9', peach: '#ffe3d4',
@@ -12,6 +13,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
   const completed = list.filter(s => db.checks[s.key]).length;
   const small = info.widgetName === 'HaruSmall';
   const next = nextDose(db);
+  const { contentHeight, rowHeight, rowGap } = largeWidgetLayout(info.height);
   const dateLabel = new Date(`${day}T12:00:00`).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
   const updated = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
   return (
@@ -34,27 +36,39 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
           <TextWidget text={next ? next.m.name : '앱에서 일정을 관리하세요'} maxLines={1} truncate="END" style={{ fontSize: 11, color: C.muted, marginTop: 3 }} />
         </FlexWidget>
       ) : list.length ? (
-        <ListWidget style={{ height: Math.max(44, info.height - 16), width: 'match_parent' }}>
-          {list.map((s, index) => {
-            const done = !!db.checks[s.key];
-            return (
-              <FlexWidget key={s.key} style={{
-                width: 'match_parent', flexDirection: 'row', alignItems: 'center',
-                paddingHorizontal: 8, paddingVertical: 3, marginBottom: 4, borderRadius: 12,
-                backgroundColor: done ? C.done : index % 2 ? '#f8f4ff' : C.card,
-              }}>
-                <FlexWidget style={{ flex: 1 }} clickAction="OPEN_APP">
-                  <TextWidget text={s.m.name} maxLines={1} truncate="END" style={{ fontSize: 13, color: C.ink, fontWeight: 'bold' }} />
-                  <TextWidget text={`${s.t} · ${s.m.dose}`} maxLines={1} truncate="END" style={{ fontSize: 11, color: C.muted, marginTop: 2 }} />
-                </FlexWidget>
-                <TextWidget text={done ? '완료 · 취소' : '복용 체크'} clickAction="SET_DOSE"
-                  clickActionData={{ key: s.key, day, completed: !done }}
-                  accessibilityLabel={`${s.m.name} ${s.t} ${done ? '복용 취소' : '복용 완료'}`}
-                  style={{ fontSize: 11, color: done ? '#755823' : C.white, backgroundColor: done ? '#f5e8bd' : C.primary,
-                    borderRadius: 10, paddingHorizontal: 9, height: 44 }} />
-              </FlexWidget>
-            );
-          })}
+        <ListWidget style={{ height: contentHeight, width: 'match_parent' }}>
+          {widgetRows(list).map((row, rowIndex) => (
+            <FlexWidget key={row[0].key} style={{
+              width: 'match_parent', height: rowHeight, flexDirection: 'row',
+              marginBottom: rowGap, flexGap: 4,
+            }}>
+              {row.map((s, column) => {
+                const done = !!db.checks[s.key];
+                return (
+                  <FlexWidget key={s.key} clickAction="SET_DOSE"
+                    clickActionData={{ key: s.key, day, completed: !done }}
+                    accessibilityLabel={`${rowIndex * 2 + column + 1}. ${s.m.name} ${s.t} ${s.m.dose}. ${done ? '복용 완료, 누르면 취소' : '미복용, 누르면 완료'}`}
+                    style={{
+                      flex: 1, height: rowHeight, flexDirection: 'row', alignItems: 'center',
+                      paddingHorizontal: 6, borderRadius: 10,
+                      backgroundColor: done ? C.done : column ? '#f8f4ff' : C.card,
+                    }}>
+                    <FlexWidget style={{ flex: 1 }}>
+                      <TextWidget text={s.m.name} maxLines={1} truncate="END" allowFontScaling={false}
+                        style={{ fontSize: 12, color: C.ink, fontWeight: 'bold' }} />
+                      <TextWidget text={`${s.t} · ${s.m.dose}`} maxLines={1} truncate="END" allowFontScaling={false}
+                        style={{ fontSize: 10, color: C.muted, marginTop: 2 }} />
+                    </FlexWidget>
+                    <TextWidget text={done ? '완료' : '체크'} allowFontScaling={false}
+                      style={{ fontSize: 10, color: done ? '#755823' : C.white,
+                        backgroundColor: done ? '#f5e8bd' : C.primary, borderRadius: 8,
+                        paddingHorizontal: 5, paddingVertical: 8, marginLeft: 3 }} />
+                  </FlexWidget>
+                );
+              })}
+              {row.length === 1 && <FlexWidget style={{ flex: 1 }} />}
+            </FlexWidget>
+          ))}
         </ListWidget>
       ) : (
         <TextWidget text="오늘 먹을 약이 없어요. 앱에서 약을 등록해 주세요." style={{ fontSize: 13, color: C.muted, marginTop: 16 }} clickAction="OPEN_APP" />

@@ -120,19 +120,26 @@ export default function SettingsScreen() {
             {list.length === 0 ? (
               <Text style={[s.wNext, { color: c.mutedForeground }]}>오늘 챙길 약이 없어요</Text>
             ) : (
-              list.slice(0, 4).map((sl) => {
+              list.slice(0, 10).map((sl) => {
                 const d = db ? !!db.checks[sl.key] : false;
                 return (
                   <View key={sl.key} style={[s.wRow, { backgroundColor: d ? c.doneBg : c.rowLilac }]}>
-                    <Text numberOfLines={1} style={[s.wRowText, { color: c.cardForeground }]}>{sl.m.name} · {sl.t}</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text numberOfLines={1} style={[s.wRowText, { color: c.cardForeground }]}>{sl.m.name}</Text>
+                      <Text numberOfLines={1} style={[s.wNext, { color: c.mutedForeground }]}>{sl.t} · {sl.m.dose}</Text>
+                    </View>
                     <View style={[s.wChk, { backgroundColor: d ? c.doneButton : c.primary }]}>
-                      <Text style={[s.wChkText, { color: d ? c.doneButtonText : c.primaryForeground }]}>{d ? '취소' : '먹음'}</Text>
+                      <Text style={[s.wChkText, { color: d ? c.doneButtonText : c.primaryForeground }]}>{d ? '완료' : '체크'}</Text>
                     </View>
                   </View>
                 );
               })
             )}
           </View>
+          <Text style={[s.wNext, { color: c.mutedForeground }]}>
+            큰 위젯 4×4 · 2열 × 5행으로 최대 10개를 한눈에 봐요. 완료된 약을 누르면 취소돼요.
+            {list.length > 10 ? ` 나머지 ${list.length - 10}개는 실제 위젯에서 스크롤해 확인하세요.` : ''}
+          </Text>
         </View>
 
         <Card>
@@ -195,16 +202,16 @@ const s = StyleSheet.create({
   label: { fontFamily: 'Inter_700Bold', fontSize: 12, marginTop: 14, marginBottom: 6 },
   previewTag: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 5, marginBottom: 8 },
   previewTagText: { fontFamily: 'Inter_600SemiBold', fontSize: 11 },
-  previewRow: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
+  previewRow: { gap: 8, alignItems: 'flex-start' },
   wSmall: { width: 130, borderRadius: 22, borderWidth: 1, padding: 12, gap: 6 },
-  wLarge: { flex: 1, borderRadius: 22, borderWidth: 1, padding: 12, gap: 5 },
+  wLarge: { width: '100%', aspectRatio: 1, borderRadius: 22, borderWidth: 1, padding: 8, gap: 4, flexDirection: 'row', flexWrap: 'wrap', alignContent: 'flex-start' },
   wHead: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   wTitle: { fontFamily: 'Inter_700Bold', fontSize: 11 },
   wBig: { fontFamily: 'Inter_700Bold', fontSize: 28, letterSpacing: -1 },
   wNext: { fontFamily: 'Inter_500Medium', fontSize: 10, lineHeight: 14 },
   wLabel: { fontFamily: 'Inter_500Medium', fontSize: 9, marginTop: 4, opacity: 0.8 },
-  wRow: { flexDirection: 'row', alignItems: 'center', borderRadius: 9, paddingLeft: 7, paddingVertical: 3, paddingRight: 3, gap: 4 },
-  wRowText: { flex: 1, fontFamily: 'Inter_600SemiBold', fontSize: 10 },
+  wRow: { width: '49%', height: '18.8%', minHeight: 44, flexDirection: 'row', alignItems: 'center', borderRadius: 9, paddingLeft: 6, paddingVertical: 3, paddingRight: 3, gap: 3 },
+  wRowText: { fontFamily: 'Inter_600SemiBold', fontSize: 12 },
   wChk: { borderRadius: 7, paddingHorizontal: 7, paddingVertical: 4 },
   wChkText: { fontFamily: 'Inter_700Bold', fontSize: 9 },
   step: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 4 },

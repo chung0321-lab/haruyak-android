@@ -50,11 +50,11 @@
           {
             "name": "HaruLarge",
             "label": "혜진의 하루약 · 큰 카드",
-            "description": "오늘 먹을 약 목록 · 복용 체크와 취소",
+            "description": "4×4 · 약 10개 한눈에 · 복용 체크와 취소",
             "minWidth": "250dp",
-            "minHeight": "110dp",
+            "minHeight": "250dp",
             "targetCellWidth": 4,
-            "targetCellHeight": 2,
+            "targetCellHeight": 4,
             "resizeMode": "horizontal|vertical",
             "updatePeriodMillis": 1800000,
             "previewImage": "./assets/images/icon.png"
