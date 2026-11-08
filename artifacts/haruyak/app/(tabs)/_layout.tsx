@@ -1,5 +1,5 @@
 import React from 'react';
-import { type ColorValue } from 'react-native';
+import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
@@ -10,8 +10,11 @@ type IconName = React.ComponentProps<typeof Feather>['name'];
 export default function TabLayout() {
   const c = useColors();
   const insets = useSafeAreaInsets();
-  // Reserve 60dp for the menu, separately from Android's gesture/3-button area.
-  const bottomInset = Math.max(insets.bottom, 8);
+  const { fontScale } = useWindowDimensions();
+  // Some One UI navigation modes report a small/zero inset during startup.
+  // Keep a minimum Android buffer, then reserve additional space for labels.
+  const bottomInset = Platform.OS === 'android' ? Math.max(insets.bottom, 24) + 12 : Math.max(insets.bottom, 12);
+  const menuHeight = 72 + Math.ceil(20 * Math.max(0, fontScale - 1));
   const icon = (name: IconName) =>
     function TabIcon({ color }: { color: ColorValue }) {
       return <Feather name={name} size={20} color={color as string} />;
@@ -24,9 +27,9 @@ export default function TabLayout() {
         tabBarInactiveTintColor: c.mutedForeground,
         tabBarLabelPosition: 'below-icon',
         tabBarHideOnKeyboard: true,
-        tabBarLabelStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 11, lineHeight: 16, marginBottom: 2 },
+        tabBarLabelStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 12, lineHeight: 20, includeFontPadding: true },
         tabBarActiveBackgroundColor: c.secondary,
-        tabBarItemStyle: { borderRadius: 14, marginHorizontal: 3, paddingVertical: 4 },
+        tabBarItemStyle: { borderRadius: 16, marginHorizontal: 4, paddingVertical: 6 },
         tabBarStyle: {
           // Normal layout reserves screen space; content cannot slip underneath.
           backgroundColor: c.white,
@@ -34,8 +37,8 @@ export default function TabLayout() {
           borderTopColor: c.border,
           elevation: 0,
           paddingHorizontal: 8,
-          height: 60 + bottomInset,
-          paddingTop: 4,
+          height: menuHeight + bottomInset,
+          paddingTop: 6,
           paddingBottom: bottomInset,
         },
       }}

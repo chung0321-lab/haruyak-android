@@ -2,7 +2,7 @@
   "expo": {
     "name": "혜진의 하루약",
     "slug": "haruyak",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "haruyak",
@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "com.haruyak.hyejin",
-      "versionCode": 4,
+      "versionCode": 5,
       "allowBackup": false,
       "permissions": ["android.permission.RECEIVE_BOOT_COMPLETED"],
       "blockedPermissions": [
@@ -50,7 +50,7 @@
           {
             "name": "HaruLarge",
             "label": "혜진의 하루약 · 큰 카드",
-            "description": "4×4 · 약 10개 한눈에 · 복용 체크와 취소",
+            "description": "날짜와 오늘 복약 목록 · 약 이름으로 앱 열기 · 원형 버튼으로 체크",
             "minWidth": "250dp",
             "minHeight": "250dp",
             "targetCellWidth": 4,
