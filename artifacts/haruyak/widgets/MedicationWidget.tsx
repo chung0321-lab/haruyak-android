@@ -3,7 +3,7 @@
 import React from 'react';
 import { FlexWidget, ImageWidget, ListWidget, TextWidget, type WidgetInfo } from 'react-native-android-widget';
 import { type Database, nextDose, slots, today } from '../lib/model';
-import { largeWidgetLayout, widgetRows } from './layout';
+import { largeWidgetLayout, widgetColumnWidth, widgetRows } from './layout';
 
 const C = { ink: '#51405e', muted: '#88768f', primary: '#8262ad', peach: '#fff0e7',
   lilac: '#f0eaff', card: '#fffdfa', done: '#e7f2e9' } as const;
@@ -13,6 +13,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
   const day = today(), list = slots(db, day), completed = list.filter(s => db.checks[s.key]).length;
   const small = info.widgetName === 'HaruSmall', next = nextDose(db);
   const columns = 2;
+  const columnWidth = widgetColumnWidth(info.width);
   const { contentHeight, rowHeight, rowGap } = largeWidgetLayout(info.height);
   const dateLabel = new Date(`${day}T12:00:00`).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric', weekday: 'short' });
   const allDone = list.length > 0 && completed === list.length;
@@ -65,7 +66,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
                 const done = !!db.checks[s.key];
                 return (
                   <FlexWidget key={s.key} clickAction="OPEN_APP" accessibilityLabel={`${s.m.name} 상세 정보. 앱 열기`}
-                    style={{ flex: 1, height: rowHeight, flexDirection: 'row', alignItems: 'center',
+                    style={{ width: columnWidth, height: rowHeight, flexDirection: 'row', alignItems: 'center',
                       paddingLeft: 8, paddingRight: 3, borderRadius: 13, borderWidth: 1,
                       borderColor: done ? '#cfdfd0' : '#ffffff',
                       backgroundColor: done ? C.done : column ? '#f9f5ff' : C.card }}>
@@ -84,7 +85,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
                   </FlexWidget>
                 );
               })}
-              {columns === 2 && row.length === 1 && <FlexWidget style={{ flex: 1 }} />}
+              {row.length === 1 && <FlexWidget style={{ width: columnWidth, height: rowHeight }} />}
             </FlexWidget>
           ))}
         </ListWidget>
@@ -95,10 +96,12 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
           <TextWidget text="눌러서 복용 일정 등록하기" style={{ fontSize: 10, color: C.muted, marginTop: 5 }} />
         </FlexWidget>
       )}
-      {!small && <FlexWidget style={{ flexDirection: 'row', width: 'match_parent', justifyContent: 'space-between',
-        alignItems: 'center', height: 16, marginTop: 4 }}>
-        <TextWidget text="약 이름 → 앱 열기  ·  ○ → 복용 체크" allowFontScaling={false}
-          style={{ fontSize: 8, color: C.muted }} />
+      {!small && <FlexWidget clickAction="REFRESH" accessibilityLabel="최신 복약 기록 새로고침"
+        style={{ flexDirection: 'row', width: 'match_parent', justifyContent: 'flex-end',
+        alignItems: 'center', height: 28, marginTop: 4 }}>
+        <TextWidget text="새로고침" allowFontScaling={false}
+          style={{ fontSize: 10, lineHeight: 14, height: 26, paddingHorizontal: 8, paddingVertical: 3,
+            color: C.primary, backgroundColor: '#ffffff', borderRadius: 10 }} />
       </FlexWidget>}
     </FlexWidget>
   );
