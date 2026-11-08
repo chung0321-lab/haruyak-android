@@ -12,7 +12,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
   'use no memo';
   const day = today(), list = slots(db, day), completed = list.filter(s => db.checks[s.key]).length;
   const small = info.widgetName === 'HaruSmall', next = nextDose(db);
-  const columns = info.width >= 300 ? 2 : 1;
+  const columns = 2;
   const { contentHeight, rowHeight, rowGap } = largeWidgetLayout(info.height);
   const dateLabel = new Date(`${day}T12:00:00`).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric', weekday: 'short' });
   const allDone = list.length > 0 && completed === list.length;
@@ -23,17 +23,20 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
       style={{ width: 'match_parent', height: 'match_parent', padding: 12, borderRadius: 24,
         backgroundColor: C.peach, backgroundGradient: { from: C.peach, to: C.lilac, orientation: 'TL_BR' } }}>
       <FlexWidget clickAction="OPEN_APP" accessibilityLabel="날짜와 제목. 눌러서 앱 열기"
-        style={{ flexDirection: 'row', alignItems: 'center', width: 'match_parent', height: small ? 24 : 30 }}>
+        style={{ flexDirection: 'row', alignItems: 'center', width: 'match_parent', height: small ? 24 : 28 }}>
         <ImageWidget image={require('../assets/images/icon.png')} imageWidth={small ? 20 : 26} imageHeight={small ? 20 : 26} />
         <FlexWidget style={{ flex: 1, marginLeft: 7 }}>
           <TextWidget text="혜진의 하루약" maxLines={1} truncate="END" allowFontScaling={false}
-            style={{ fontSize: small ? 11 : 14, fontWeight: 'bold', color: C.ink }} />
-          <TextWidget text={dateLabel} maxLines={1} allowFontScaling={false}
-            style={{ fontSize: 9, color: C.muted, marginTop: 2 }} />
+            style={{ fontSize: small ? 11 : 14, height: 22, lineHeight: 20, fontWeight: 'bold', color: C.ink }} />
         </FlexWidget>
         {!small && <TextWidget text="열기 ›" clickAction="OPEN_APP" accessibilityLabel="하루약 앱 열기"
           style={{ fontSize: 10, color: C.primary, padding: 6, backgroundColor: '#ffffff', borderRadius: 10 }} />}
       </FlexWidget>
+      {/* Give Android's Korean font ascent/descent a dedicated line, outside
+          the fixed-height title row. No title/date compression on One UI. */}
+      <TextWidget text={dateLabel} maxLines={1} allowFontScaling={false} clickAction="OPEN_APP"
+        accessibilityLabel={`오늘 날짜 ${dateLabel}. 앱 열기`}
+        style={{ fontSize: 10, lineHeight: 16, height: 20, paddingBottom: 2, marginTop: 2, color: C.muted }} />
       <FlexWidget style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         width: 'match_parent', height: small ? 32 : 28, marginTop: 4 }}>
         <TextWidget text={small ? `${completed} / ${list.length}` : `오늘 ${completed} / ${list.length}회 완료`}
@@ -50,7 +53,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
         <FlexWidget clickAction="OPEN_APP" style={{ flex: 1, width: 'match_parent', justifyContent: 'center' }}>
           <TextWidget text={next ? next.m.name : allDone ? '오늘도 잘 챙겼어요' : '오늘 복용 일정 없음'} maxLines={1} truncate="END"
             allowFontScaling={false} style={{ fontSize: 12, color: C.ink, fontWeight: 'bold' }} />
-          <TextWidget text={next ? `${next.t} · ${next.m.dose}` : '눌러서 앱 열기'} maxLines={2} allowFontScaling={false}
+          <TextWidget text={next ? next.t : '눌러서 앱 열기'} maxLines={2} allowFontScaling={false}
             style={{ fontSize: 10, color: C.muted, marginTop: 3 }} />
         </FlexWidget>
       ) : list.length ? (
@@ -69,7 +72,7 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
                     <FlexWidget style={{ flex: 1 }}>
                       <TextWidget text={s.m.name} maxLines={1} truncate="END" allowFontScaling={false}
                         style={{ fontSize: 12, color: C.ink, fontWeight: 'bold' }} />
-                      <TextWidget text={`${s.t} · ${s.m.dose}`} maxLines={1} truncate="END" allowFontScaling={false}
+                      <TextWidget text={s.t} maxLines={1} truncate="END" allowFontScaling={false}
                         style={{ fontSize: 9, color: C.muted, marginTop: 3 }} />
                     </FlexWidget>
                     <FlexWidget clickAction="SET_DOSE" clickActionData={{ key: s.key, day, completed: !done }}
@@ -96,8 +99,6 @@ export function MedicationWidget({ db, info, error }: { db: Database; info: Widg
         alignItems: 'center', height: 16, marginTop: 4 }}>
         <TextWidget text="약 이름 → 앱 열기  ·  ○ → 복용 체크" allowFontScaling={false}
           style={{ fontSize: 8, color: C.muted }} />
-        <TextWidget text="↻" clickAction="REFRESH" accessibilityLabel="위젯 새로고침"
-          style={{ fontSize: 13, color: C.primary, paddingHorizontal: 5 }} />
       </FlexWidget>}
     </FlexWidget>
   );
@@ -109,7 +110,7 @@ export function WidgetError({ message }: { message: string }) {
     <FlexWidget style={{ width: 'match_parent', height: 'match_parent', padding: 16,
       backgroundColor: '#fff1e8', borderRadius: 20 }} clickAction="OPEN_APP">
       <TextWidget text="혜진의 하루약" style={{ fontSize: 16, color: '#4c3c61', fontWeight: 'bold' }} />
-      <TextWidget text="위젯을 표시하지 못했어요. 눌러서 앱을 열고 다시 갱신해 주세요."
+      <TextWidget text="위젯을 표시하지 못했어요. 눌러서 앱을 열어 주세요."
         maxLines={4} style={{ fontSize: 12, color: '#a83434', marginTop: 8 }} />
       <TextWidget text={message} maxLines={3} style={{ fontSize: 10, color: '#796d87', marginTop: 8 }} />
     </FlexWidget>
